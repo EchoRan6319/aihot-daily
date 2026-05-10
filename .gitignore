@@ -1,0 +1,9 @@
+# Generated output
+output/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Claude Code
+.claude/

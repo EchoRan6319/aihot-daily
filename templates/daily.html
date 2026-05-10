@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI HOT 日报 - {{ report.date }}</title>
+  <link rel="stylesheet" href="{{ '../' if not is_index else '' }}style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>AI HOT 日报</h1>
+    <p class="subtitle">每日 AI 资讯精选 · 数据来自 aihot.virxact.com</p>
+  </header>
+
+  <main class="container">
+    <div class="report-meta">
+      <span class="date">{{ report.date }}</span>
+      {% if archive_dates %}
+      <a class="archive-link" href="#archives">历史日报 ({{ archive_dates|length }})</a>
+      {% endif %}
+    </div>
+
+    {% if report.lead %}
+    <div class="lead">
+      {% if report.lead.title %}
+      <div class="lead-title">{{ report.lead.title }}</div>
+      {% endif %}
+      {% if report.lead.leadParagraph %}
+      <p>{{ report.lead.leadParagraph }}</p>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% for section in report.sections %}
+    <div class="section">
+      <h2 class="section-title">{{ section.label }}</h2>
+      <div class="cards">
+        {% for item in section["items"] %}
+        <div class="card">
+          <div class="card-title">
+            {% if item.sourceUrl %}
+            <a href="{{ item.sourceUrl }}" target="_blank" rel="noopener">{{ item.title }}</a>
+            {% else %}
+            {{ item.title }}
+            {% endif %}
+          </div>
+          {% if item.sourceName %}
+          <div class="card-source">{{ item.sourceName }}</div>
+          {% endif %}
+          {% if item.summary %}
+          <div class="card-summary">{{ item.summary }}</div>
+          {% endif %}
+          {% if item.sourceUrl %}
+          <div class="card-link">
+            <a href="{{ item.sourceUrl }}" target="_blank" rel="noopener">阅读原文 →</a>
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+
+    {% if report.flashes %}
+    <div class="flashes">
+      <h3>快讯</h3>
+      {% for flash in report.flashes %}
+      <div class="flash-item">
+        {% if flash.sourceUrl %}
+        <a href="{{ flash.sourceUrl }}" target="_blank" rel="noopener">{{ flash.title }}</a>
+        {% else %}
+        {{ flash.title }}
+        {% endif %}
+        {% if flash.sourceName %}
+        <span class="flash-source">— {{ flash.sourceName }}</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if archive_dates %}
+    <div class="archive-section" id="archives">
+      <h3>历史日报</h3>
+      <div class="archive-list">
+        {% for d in archive_dates %}
+        <a href="{{ '../' if not is_index else '' }}archive/{{ d }}.html"
+           class="{{ 'current' if d == report.date else '' }}">{{ d }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </main>
+
+  <footer class="site-footer">
+    <p>Powered by <a href="https://aihot.virxact.com" target="_blank" rel="noopener">AI HOT</a> · 自动更新于北京时间每天 09:00</p>
+  </footer>
+</body>
+</html>
