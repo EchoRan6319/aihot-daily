@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI HOT 日报 - {{ report.date }}</title>
   <link rel="stylesheet" href="{{ '../' if not is_index else '' }}style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 </head>
 <body>
   <header class="site-header">
     <h1>AI HOT 日报</h1>
-    <p class="subtitle">每日 AI 资讯精选 · 数据来自 aihot.virxact.com</p>
+    <p class="subtitle">每日 AI 资讯精选</p>
   </header>
 
   <main class="container">
@@ -31,18 +32,25 @@
     </div>
     {% endif %}
 
+    {% set section_icons = {
+      "模型发布/更新": '<svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>',
+      "产品发布/更新": '<svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+      "行业动态": '<svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>',
+      "论文研究": '<svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>',
+      "技巧与观点": '<svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 017 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 01-1 1h-6a1 1 0 01-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 017-7z"/><path d="M9 21h6"/></svg>'
+    } %}
+
     {% for section in report.sections %}
     <div class="section">
-      <h2 class="section-title">{{ section.label }}</h2>
+      <div class="section-header">
+        {{ section_icons.get(section.label, '') }}
+        <h2 class="section-title">{{ section.label }}<span class="section-count">({{ section["items"]|length }})</span></h2>
+      </div>
       <div class="cards">
         {% for item in section["items"] %}
-        <div class="card">
+        <div class="card" onclick="window.open('{{ item.sourceUrl }}', '_blank')">
           <div class="card-title">
-            {% if item.sourceUrl %}
             <a href="{{ item.sourceUrl }}" target="_blank" rel="noopener">{{ item.title }}</a>
-            {% else %}
-            {{ item.title }}
-            {% endif %}
           </div>
           {% if item.sourceName %}
           <div class="card-source">{{ item.sourceName }}</div>
@@ -50,11 +58,9 @@
           {% if item.summary %}
           <div class="card-summary">{{ item.summary }}</div>
           {% endif %}
-          {% if item.sourceUrl %}
           <div class="card-link">
             <a href="{{ item.sourceUrl }}" target="_blank" rel="noopener">阅读原文 →</a>
           </div>
-          {% endif %}
         </div>
         {% endfor %}
       </div>
