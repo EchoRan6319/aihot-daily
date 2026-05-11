@@ -43,7 +43,7 @@
     {% for section in report.sections %}
     <div class="section">
       <div class="section-header">
-        {{ section_icons.get(section.label, '') }}
+        {{ section_icons.get(section.label, '') | safe }}
         <h2 class="section-title">{{ section.label }}<span class="section-count">({{ section["items"]|length }})</span></h2>
       </div>
       <div class="cards">

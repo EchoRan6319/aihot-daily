@@ -105,14 +105,15 @@ def main():
         for f in sorted(archive_dir.glob("*.html"), reverse=True):
             archive_dates.append(f.stem)
 
-    # Render daily page
-    html = render_template(env, "daily.html", report=data, archive_dates=archive_dates, is_index=True)
+    # Render daily page (index version)
+    html_index = render_template(env, "daily.html", report=data, archive_dates=archive_dates, is_index=True)
 
     # Write index.html
-    write_file(OUTPUT_DIR / "index.html", html)
+    write_file(OUTPUT_DIR / "index.html", html_index)
 
-    # Write archive page
-    write_file(archive_dir / f"{date_str}.html", html)
+    # Render and write archive page (needs is_index=False for correct CSS path)
+    html_archive = render_template(env, "daily.html", report=data, archive_dates=archive_dates, is_index=False)
+    write_file(archive_dir / f"{date_str}.html", html_archive)
 
     # Add to archive list if not already there
     if date_str not in archive_dates:
